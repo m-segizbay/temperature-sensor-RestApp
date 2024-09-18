@@ -24,9 +24,9 @@ public class SensorValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        SensorDTO sensorDTO = (SensorDTO) target;
+        Sensor sensor = (Sensor) target;
 
-        if (sensorService.findByName(sensorDTO.getName()).isPresent()){
+        if (sensorService.findByName(sensor.getName()).isPresent()){
             errors.rejectValue("name", "", "This name already is taken!");
         }
     }

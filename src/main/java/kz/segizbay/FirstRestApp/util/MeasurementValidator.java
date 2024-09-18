@@ -1,6 +1,5 @@
 package kz.segizbay.FirstRestApp.util;
 
-import kz.segizbay.FirstRestApp.dto.MeasurementDTO;
 import kz.segizbay.FirstRestApp.models.Measurement;
 import kz.segizbay.FirstRestApp.services.SensorsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,9 @@ public class MeasurementValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        MeasurementDTO measurementDTO = (MeasurementDTO) target;
+        Measurement measurement = (Measurement) target;
 
-        if (!sensorsService.findByName(measurementDTO.getSensor().getName()).isPresent()){
+        if (!sensorsService.findByName(measurement.getSensor().getName()).isPresent()){
             errors.rejectValue("sensor", "", "This sensor dosnt exist with this name!");
         }
     }

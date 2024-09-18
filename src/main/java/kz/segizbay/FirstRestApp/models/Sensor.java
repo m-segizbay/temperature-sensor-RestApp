@@ -4,16 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "sensor")
-public class Sensor {
+public class Sensor implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "name")
     @NotEmpty(message = "Name should be not empty!")
@@ -26,8 +27,6 @@ public class Sensor {
     @Column(name = "created_who")
     private String createdWho;
 
-    @OneToMany(mappedBy = "sensor", cascade = CascadeType.REMOVE)
-    private List<Measurement> measurement;
 
     public Sensor() {
     }
@@ -36,15 +35,6 @@ public class Sensor {
         this.name = name;
         this.createdAt = createdAt;
         this.createdWho = createdWho;
-        this.measurement = measurement;
-    }
-
-    public List<Measurement> getMeasurement() {
-        return measurement;
-    }
-
-    public void setMeasurement(List<Measurement> measurement) {
-        this.measurement = measurement;
     }
 
     public int getId() {

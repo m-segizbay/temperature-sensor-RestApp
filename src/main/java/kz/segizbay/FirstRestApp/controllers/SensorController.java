@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static kz.segizbay.FirstRestApp.util.ErrorsUtil.returnErrorsToClient;
 
 @RestController
 @RequestMapping("/sensors")
@@ -34,32 +33,12 @@ public class SensorController {
     @PostMapping("/registration")
     public ResponseEntity<HttpStatus> createSensor(@RequestBody @Valid SensorDTO sensorDTO,
                                                    BindingResult bindingResult){
-        sensorValidator.validate(sensorDTO, bindingResult);
-        if (bindingResult.hasErrors()) {
-            StringBuilder errorsMsg = new StringBuilder();
-
-            List<FieldError> errors = bindingResult.getFieldErrors();
-
-            for (FieldError error : errors){
-                errorsMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-            throw new SensorValidException(errorsMsg.toString());
-        }
-        sensorService.save(convertToSensor(sensorDTO));
+        Sensor sensorToAdd = convertToSensor(sensorDTO);
+        sensorValidator.validate(sensorToAdd, bindingResult);
+        if (bindingResult.hasErrors())
+            returnErrorsToClient(bindingResult);
+        sensorService.save(sensorToAdd);
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<SensorErrorResponse> exceptionHendler(SensorValidException e){
-        SensorErrorResponse response = new SensorErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis()
-        );
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     private Sensor convertToSensor(SensorDTO sensorDTO){

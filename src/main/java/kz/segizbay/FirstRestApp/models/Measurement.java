@@ -11,23 +11,24 @@ public class Measurement {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "value")
     @Min(value = 0, message = "Value must be greater than or equal to -100")
     @Max(value = 100, message = "Value must be less than or equal to 100")
     @NotNull(message = "Value should be not empty!")
-    private double value;
+    private Double value;
 
     @Column(name = "raining")
     @NotNull(message = "Raining should be not empty!")
-    private boolean raining;
+    private Boolean raining;
 
     @Column(name = "measurement_date_time")
     private LocalDateTime measurementDateTime;
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "sensor_id", referencedColumnName = "id")
+    @JoinColumn(name = "sensor", referencedColumnName = "name")
     private Sensor sensor;
 
     public Measurement() {
