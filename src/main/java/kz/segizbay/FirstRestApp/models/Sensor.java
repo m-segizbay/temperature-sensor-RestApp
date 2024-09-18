@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "sensor")
@@ -16,7 +17,7 @@ public class Sensor {
 
     @Column(name = "name")
     @NotEmpty(message = "Name should be not empty!")
-    @Size(min = 2, max = 100, message = "Name should be between 2 and 100 characters!")
+    @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters!")
     private String name;
 
     @Column(name = "created_at")
@@ -25,24 +26,24 @@ public class Sensor {
     @Column(name = "created_who")
     private String createdWho;
 
-    @OneToOne(mappedBy = "sensor", cascade = CascadeType.ALL)
-    private Measurement measurement;
+    @OneToMany(mappedBy = "sensor", cascade = CascadeType.REMOVE)
+    private List<Measurement> measurement;
 
     public Sensor() {
     }
 
-    public Sensor(String name, LocalDateTime createdAt, String createdWho, Measurement measurement) {
+    public Sensor(String name, LocalDateTime createdAt, String createdWho, List<Measurement> measurement) {
         this.name = name;
         this.createdAt = createdAt;
         this.createdWho = createdWho;
         this.measurement = measurement;
     }
 
-    public Measurement getMeasurement() {
+    public List<Measurement> getMeasurement() {
         return measurement;
     }
 
-    public void setMeasurement(Measurement measurement) {
+    public void setMeasurement(List<Measurement> measurement) {
         this.measurement = measurement;
     }
 
